@@ -1,5 +1,5 @@
+#!/usr/bin/python3
 import sys
-
 medicos = 3
 atendentes = 2
 
@@ -25,21 +25,27 @@ class Cliente:
 		return self.__str__()
 	def __unicode__(self):
 		return self.__str__()
-class Dummy:
-	def __init__(self):
-		pass
+class Dummy: #singleton
+	_instance = None
+	def __new__(cls):
+		if cls._instance is None:
+			print('Creating the object')
+			cls._instance = super(Dummy, cls).__new__(cls)
+			# Put any initialization here.
+		return cls._instance
 	def pronto(self):
 		return True
 	def consultar(self):
 		return True
+
 class Entidade:
 	def __init__(self, atendentes):
 		self.atendentes = atendentes
 		self.consultas = [Dummy()]*atendentes #0 == medico livre
 	def VerificaDisp(self):
-		return True if self.consultas.index(0) != -1 else False 
+		return False if self.consultas.index(Dummy()) != -1 else True
 	def Atender(self,paciente):
-		indice = self.consultas.index(0) #retorna o slot do primeiro medico livre
+		indice = self.consultas.index(Dummy()) #retorna o slot do primeiro medico livre, muito mais rapido que percorrer tudo
 		self.consultas[indice]
 	def Consultar(self):
 		self.consultas = [x-1 for x in self.consultas]
