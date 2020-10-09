@@ -1,39 +1,60 @@
 import sys
 
-
-tempo=0;
-
 medicos = 3
 atendentes = 2
 
 class Cliente:
-	def __init__(self,chegada,eletronico,caixa,gerente):
+	def __init__(self,chegada,ficha,consulta,pagamento):
 		self.chegada=chegada
-		self.eletronico=eletronico
-		self.caixa=caixa
-		self.gerente=gerente
+		self.ficha=ficha
+		self.consulta=consulta
+		self.pagamento=pagamento
 
+		self.espera=0
+		self.atendimento=0
+	def esperar(self):
+		self.espera+=1
+	def pronto(self):
+		return self.consulta == self.atendimento
+	def consultar(self):
+		self.atendimento+=1
+		return self.pronto()
+	def __str__(self):
+		return str.format("(c:{} f:{} c:{} p:{})", self.chegada,self.ficha,self.consulta,self.pagamento)
+	def __repr__(self):
+		return self.__str__()
+	def __unicode__(self):
+		return self.__str__()
+class Dummy:
+	def __init__(self):
+		pass
+	def pronto(self):
+		return True
+	def consultar(self):
+		return True
 class Entidade:
 	def __init__(self, atendentes):
 		self.atendentes = atendentes
-		self.consultas = [0]*atendentes #0 == medico livre
+		self.consultas = [Dummy()]*atendentes #0 == medico livre
 	def VerificaDisp(self):
 		return True if self.consultas.index(0) != -1 else False 
-	def Atender(self,tempo):
+	def Atender(self,paciente):
 		indice = self.consultas.index(0) #retorna o slot do primeiro medico livre
 		self.consultas[indice]
 	def Consultar(self):
 		self.consultas = [x-1 for x in self.consultas]
 #simulacao
 def simulacao(entradas):
+	tempo = 0
 	(chegada,ficha,consulta,pagamento) = entradas
-	pacientes = [(a,b,c,d) for a,b,c,d in zip(chegada,ficha,consulta,pagamento)]
+	pacientes = [Cliente(a,b,c,d) for a,b,c,d in zip(chegada,ficha,consulta,pagamento)]
 	filas = {'balcao':[],'consulta':[]}
 	balcao = Entidade(atendentes)
 	medicos = Entidade(atendentes)
-
+	print (pacientes, file=sys.stderr)
 	while (tempo < 100):
 		balcao.VerificaDisp()
+		tempo+=1
 
 def main():
 	print("insira os tempos que cada paciente leva:",file=sys.stderr)
@@ -53,7 +74,7 @@ def main():
 	pagamento = le.split(',')
 	espera = [0] * len(chegada)
 
-	entradas = (chegada,ficha,consulta,pagamento)
+	fixas = (chegada,ficha,consulta,pagamento)
 
 
 	simulacao(fixas)
