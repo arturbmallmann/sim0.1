@@ -82,7 +82,7 @@ def main():
 
 	fixas = (chegada,ficha,consulta,pagamento)
 
-
+	
 	simulacao(fixas)
 if __name__ == "__main__":
 	main()
