@@ -13,18 +13,26 @@ class cli:
 class Cliente(cli):
 	def __init__(self,chegada,ficha,consulta,pagamento):
 		self.chegada=chegada
+		self.at_caixa=-1
+		self.fila_c1=-1
 		self.ficha=ficha
+		self.at_consulta=-1
+		self.fila_c2=-1
 		self.consulta=consulta
 		self.pagamento=pagamento
 
+		self.tempo_filas=0
 		self.atendimento=0
+
 	def pronto(self):
 		return self.consulta == self.atendimento
 	def consultar(self):
 		self.atendimento+=1
 		return self.pronto()
+	def tempo_total(self):
+			return self.tempo_filas + self.ficha + self.consulta + self.pagamento
 	def __str__(self):
-		return str.format("(c:{} f:{} c:{} p:{})", self.chegada,self.ficha,self.consulta,self.pagamento)
+		return ','.join([str(x) for x in [self.chegada,self.at_caixa,self.fila_c1,self.ficha,self.at_consulta,self.fila_c2,self.pagamento]])
 	def __repr__(self):
 		return self.__str__()
 	def __unicode__(self):
@@ -46,21 +54,25 @@ class Dummy(cli): #singleton
 class Entidade:
 	def __init__(self, n_at):
 		self.n_at = n_at
-		self.atendentes = [Dummy()]*n_at #0 == medico livre
+		self.atendentes = [Dummy()]*n_at #Dummy == entidade livre:ninguém
 		self.fila = []
-	def VerificaDisp(self):
+	def verif_disp(self):
 		return False if self.atendentes.index(Dummy()) != -1 else True
-	def AtenderProx(self):
-		indice = self.atendentes.index(Dummy()) #retorna o slot do primeiro medico livre, muito mais rapido que percorrer tudo
-		self.consultas[indice] = self.fila.pop(0)
-	def Entrar_na_fila (self,time,dest,cli_data): #hora q entrou na fila, destino(consulta ou sair) e dados do cliente
-		fila.append((time,dest,cli_data))
-		fila.sort(key= lambda x: x.time)
-		print("fila em ordem: {}".format(self.fila))
-		
+	def atende_prox(self):
+		indice = self.atendentes.index(Dummy()) #retorna o slot da primeira entidade livre
+		if(self.fila.index(0)[0] == self.time):
+			print("Atendendo cliente {}".format(self.fila.index(0)[2]),file = sys.stderr) 
+			self.consultas[indice] = self.fila.pop(0)
+	def entra_na_fila (self,hora,dest,cli): #hora q entrou na fila, destino(1=consulta ou 0=sair) e dados do cliente
+		self.fila.append((hora,dest,cli))
+		self.fila.sort(key= lambda x: x[0])
+#		print("fila em ordem: {}".format(self.fila),file = sys.stderr)
+	def time(self,time):
+		self.time = time
 
 #simulacao
 def simulacao(entradas):
+	tempo = 0
 	(chegada,ficha,consulta,pagamento) = entradas
 	pacientes = [Cliente(float(a),float(b),float(c),float(d)) for a,b,c,d in zip(chegada,ficha,consulta,pagamento)]
 	pacientes.sort(key= lambda paciente : paciente.chegada)
@@ -68,9 +80,17 @@ def simulacao(entradas):
 	balcao = Entidade(atendentes)
 	clinica = Entidade(medicos)
 	print (pacientes, file=sys.stderr)
-	#while (tempo < 100):
-		
+	print ("chegada,at_caixa,fila_c1,ficha,at_consulta,fila_c2,pagamento")
+	while (tempo < 100000):
+#		print(tempo)
+		indexes = [i for i,s in enumerate(pacientes) if s.chegada*1000==tempo]
+		if(len(indexes)!= 0):
+			print("entrou aqui {}".format(indexes))
+			for i in indexes: balcao.entra_na_fila(pacientes[i].chegada,1,pacientes[i])
+		if balcao.verif_disp():
+			balcao.atende_prox()
 	#	balcao.VerificaDisp()
+		tempo += 1
 
 
 
