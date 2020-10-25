@@ -10,10 +10,7 @@ class Cliente:
 		self.consulta=consulta
 		self.pagamento=pagamento
 
-		self.espera=0
 		self.atendimento=0
-	def esperar(self):
-		self.espera+=1
 	def pronto(self):
 		return self.consulta == self.atendimento
 	def consultar(self):
@@ -25,6 +22,7 @@ class Cliente:
 		return self.__str__()
 	def __unicode__(self):
 		return self.__str__()
+
 class Dummy: #singleton
 	_instance = None
 	def __new__(cls):
@@ -49,18 +47,21 @@ class Entidade:
 		self.consultas[indice]
 	def Consultar(self):
 		self.consultas = [x-1 for x in self.consultas]
+
 #simulacao
 def simulacao(entradas):
-	tempo = 0
 	(chegada,ficha,consulta,pagamento) = entradas
-	pacientes = [Cliente(a,b,c,d) for a,b,c,d in zip(chegada,ficha,consulta,pagamento)]
-	filas = {'balcao':[],'consulta':[]}
+	pacientes = [Cliente(float(a),float(b),float(c),float(d)) for a,b,c,d in zip(chegada,ficha,consulta,pagamento)]
+	pacientes.sort(key= lambda paciente : paciente.chegada)
+#	filas = {'balcao':[],'consulta':[]}
 	balcao = Entidade(atendentes)
-	medicos = Entidade(atendentes)
+	clinica = Entidade(medicos)
 	print (pacientes, file=sys.stderr)
-	while (tempo < 100):
-		balcao.VerificaDisp()
-		tempo+=1
+	#while (tempo < 100):
+		
+	#	balcao.VerificaDisp()
+
+
 
 def main():
 	print("insira os tempos que cada paciente leva:",file=sys.stderr)
@@ -78,11 +79,9 @@ def main():
 	print("pagamento:",file=sys.stderr)
 	le = input()
 	pagamento = le.split(',')
-	espera = [0] * len(chegada)
-
-	fixas = (chegada,ficha,consulta,pagamento)
-
 	
+	fixas = (chegada,ficha,consulta,pagamento)
 	simulacao(fixas)
+
 if __name__ == "__main__":
 	main()

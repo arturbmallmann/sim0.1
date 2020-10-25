@@ -44,13 +44,27 @@ class monteCarlo:
 		return [self.get_rand() for i in range(size)]
 
 def main():
-	amostras = [int(x) for x in input("amostras: ").split(',')]
-	classes = int(input("Numero de classes: "))
-	entradas = int(input("tamanho da simulação: "))
-	mc = monteCarlo(classes,amostras)
+	if len(sys.argv) < 3:
+		print('montecarlo <classes> <entradas>')
+		return 0	
+	argv = sys.argv
+	classes = int(argv[1])
+	entradas = int(argv[2])
+	print("insira as amostras e finalize com Ctrl D, ou direcione um arquivo na entrada padrão",file = sys.stderr)
+	linhas = sys.stdin.readlines()
+	sys.stdin.readline()
+	linhas.remove('\n')
+	sys.stdin.flush()
+#	print (linhas)
+	amostras = []
+	for linha in linhas:
+		amostras.append( [int(x) for x in linha.split(',')] )
+#	print (amostras)
+	mcs = [monteCarlo(classes,amostra) for amostra in amostras]
 #mc = monteCarlo(4,[1,1,3.5,6,5.9999,3,3.49]) #testes
-	print(export_csv(mc.gen_sim(entradas)))
+	for mc in mcs:
+		print(export_csv(mc.gen_sim(entradas)))
 #print(export_csv(mc.gen_sim(20)))
-
+	return 0
 if __name__ == "__main__":
 	main()
