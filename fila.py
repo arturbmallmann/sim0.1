@@ -3,7 +3,14 @@ import sys
 medicos = 3
 atendentes = 2
 
-class Cliente:
+
+class cli:
+	def pronto(self):
+		pass
+	def consultar(self):
+		pass
+
+class Cliente(cli):
 	def __init__(self,chegada,ficha,consulta,pagamento):
 		self.chegada=chegada
 		self.ficha=ficha
@@ -23,7 +30,7 @@ class Cliente:
 	def __unicode__(self):
 		return self.__str__()
 
-class Dummy: #singleton
+class Dummy(cli): #singleton
 	_instance = None
 	def __new__(cls):
 		if cls._instance is None:
@@ -37,16 +44,20 @@ class Dummy: #singleton
 		return True
 
 class Entidade:
-	def __init__(self, atendentes):
-		self.atendentes = atendentes
-		self.consultas = [Dummy()]*atendentes #0 == medico livre
+	def __init__(self, n_at):
+		self.n_at = n_at
+		self.atendentes = [Dummy()]*n_at #0 == medico livre
+		self.fila = []
 	def VerificaDisp(self):
-		return False if self.consultas.index(Dummy()) != -1 else True
-	def Atender(self,paciente):
-		indice = self.consultas.index(Dummy()) #retorna o slot do primeiro medico livre, muito mais rapido que percorrer tudo
-		self.consultas[indice]
-	def Consultar(self):
-		self.consultas = [x-1 for x in self.consultas]
+		return False if self.atendentes.index(Dummy()) != -1 else True
+	def AtenderProx(self):
+		indice = self.atendentes.index(Dummy()) #retorna o slot do primeiro medico livre, muito mais rapido que percorrer tudo
+		self.consultas[indice] = self.fila.pop(0)
+	def Entrar_na_fila (self,time,dest,cli_data): #hora q entrou na fila, destino(consulta ou sair) e dados do cliente
+		fila.append((time,dest,cli_data))
+		fila.sort(key= lambda x: x.time)
+		print("fila em ordem: {}".format(self.fila))
+		
 
 #simulacao
 def simulacao(entradas):
