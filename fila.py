@@ -70,6 +70,9 @@ class Entidade:
 	def time(self,time):
 		self.time = time
 
+def simrun(entidade):
+	pass
+
 #simulacao
 def simulacao(entradas):
 	tempo = 0
