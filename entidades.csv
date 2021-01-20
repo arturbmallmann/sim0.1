@@ -1,0 +1,5 @@
+LP,serv,acoes,tmin,tmax
+fila, 0, ir,2,5
+balcao, 2, fichar,7,12
+balcao, 2, pagar,2,4
+clinica, 3, consultar,15,25
