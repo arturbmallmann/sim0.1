@@ -1,9 +1,8 @@
-#!/usr/bin/python3
-from fila import *
+#definicao dos dados e interfaces da aplicacao
+from abc import ABCMeta, abstractmethod, abstractproperty
+class IGen:
+    __metaclass__ = ABCMeta
 
-def main():
-	print(f'pqp {1}')
-
-
-if '__main__'==__name__:
-	main()
+    @abstractmethod
+    def get_rand(self):
+        """gera num"""
