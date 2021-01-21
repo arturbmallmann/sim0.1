@@ -1,5 +1,5 @@
-stage, value, dest, nvalue
-fila, 1, balcao, 2
-balcao, 2, consulta, 3
-balcao, 4, saida, 4
-clinica, 3, balcao, 5
+LP, value, dest, nvalue
+__init__,__start__, balcao, fichar
+balcao, fichar, clinica, consultar
+balcao, pagar, __end__, __stop__
+clinica, consultar, balcao, pagar
