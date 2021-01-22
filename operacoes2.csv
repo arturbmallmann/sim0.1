@@ -1,5 +1,4 @@
 LP, value, dest, nvalue
 __src__,__start__, balcao, fichar
 balcao, fichar, clinica, consultar
-balcao, pagar, __sync__, __stop__
-clinica, consultar, balcao, pagar
+clinica, consultar, __sync__, __stop__

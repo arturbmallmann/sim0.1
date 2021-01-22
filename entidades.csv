@@ -1,6 +1,6 @@
 LP,serv,acoes,tmin,tmax
-__init__, 1, __start__,2,5
+__src__, 50, __start__,2,5
 balcao, 2, fichar,7,12
 balcao, 2, pagar,2,4
 clinica, 3, consultar,15,25
-__end__, 0, __stop__, 0, 0
+__sync__, 0, __stop__, 0, 0
